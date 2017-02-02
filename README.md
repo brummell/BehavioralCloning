@@ -3,6 +3,8 @@ My inclination was to use transfer learning, via either the VGG or one of Google
 
 I was also strongly inspired by Vivek's work with augmentation of existing images to create a more varied, larger training set from the extent data, I rewrote my own functions, having some slightly different tastes in python, but borrowed his double m-grid method for shadow augmentation (really an awesome use of numpy, I definitely tucked that one away for later use ;-) ). I wrote a data generator to pair with the Keras fit-generator function to avoid having to try to downsize my training data or go crazy trying to optimize fitting the whole thing in at once.
 
+(My initial Keras code was modified from one of their convnet samples). 
+
 On the note of data, I collected mine from the 50Hz simulator and a PS4 controller, using only the first track. I recorded eight laps forward, five in reverse, and a series of broken recoveries (one in each direction). All told, I collected about 65000 honest images. I had originally used a similar but smaller set from the default generator cat'ed to the Udacity set, but I found the results staggeringly better with this latter data set, and kind of lament not having put more thought into my data collection from the outset (despit having Paul Heraty's list of tips from the very beginning).
 
 Architecture:
