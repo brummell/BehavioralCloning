@@ -10,6 +10,10 @@ I collected my data from the 50Hz simulator and a PS4 controller, using only the
 
 Due to the naturally imbalanced data (overwhelming fraction of the steering angles were within +/- 0.1 degrees, see above) I had to adjust my data artificially. First, in line with the NVIDIA paper, I used the side cameras to simulate quasi-recovery angles, adjusting the labels appropriately (this was done at random, in the data generator). I was also strongly inspired by Vivek's work with augmentation of existing images via brightness adjustment, affine transformations, and synthetic shadows to create a more varied, larger training set from the extent data, I rewrote my own functions, having some slightly different tastes in python, but borrowed his double m-grid method for shadow augmentation (really an awesome use of numpy, I definitely tucked that one away for later use ;-) ). I also selectively allowed images within the +/- 0.1, typically only 5 percent of the times that such an image was drawn. I wrote a data generator to pair with the Keras fit-generator function to avoid having to try to downsize my training data or go crazy trying to optimize fitting the whole thing in at once.
 
+![alt text][histo]
+[histo]: https://github.com/brummell/BehavioralCloning/blob/master/histogram.png?raw=true "Original Angle Distribution"
+
+
 Architecture:
 Again, I chose to try to (largely, anyway) replcicate the NVIDIA end-to-end paper results. To that end, I used an architecture consisting of:
 * 1 normalization "lambda" layer; mean-normalization and pseudo-centering
@@ -23,6 +27,9 @@ Again, I chose to try to (largely, anyway) replcicate the NVIDIA end-to-end pape
 * 1 fully-connected layer; 50 output dim; ReLU activation; dropout rate of 0.5
 * 1 fully-connected layer; 10 output dim; ReLU activation; dropout rate of 0.5
 * 1 fully-connected layer; 1 output dim; no activation; no regularization
+
+![alt text][arch]
+[arch]: https://github.com/brummell/BehavioralCloning/blob/master/model.png?raw=true "Model Architecture"
 
 In working through this, I tried a fairly tremendous number of variations on these building blocks, including simpler 3x3 conv stacks like my last project (which worked well, better actually from the outset, than the NVIDIA architecture, but I again fell back into wanting to successfully reproduce their results). I also tried deeper kernel sets for the conv layers, leaky activations, uniform stride, more and less extensive dropout regularization, l2 weight regularization, different color maps. In terms of data, I used differently calibrated augmentations (in fact, I ultimately left out the affine augmentation altogether, finding it finicky and not sufficiently necessary to warrant the time and effort), different ratios of augmented to honest samples, different splits of the training data, etc. Ultimately though, these changes usually led to overfitting or, in the case of certain examples, outright failure to learn. 
 
